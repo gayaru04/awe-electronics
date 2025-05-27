@@ -1,7 +1,12 @@
 [
-  {
-    "email": "admin@awe.com",
-    "password": "admin123",
-    "role": "admin"
-  }
+    {
+        "email": "admin@awe.com",
+        "password": "admin123",
+        "role": "admin"
+    },
+    {
+        "email": "nolansia@gmail.com",
+        "password": "123",
+        "role": "customer"
+    }
 ]
