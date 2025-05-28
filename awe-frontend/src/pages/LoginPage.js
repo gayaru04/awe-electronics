@@ -11,8 +11,9 @@ function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:8000/auth/login.php', { email, password });
+      const res = await axios.post('http://localhost/awe-backend/auth/login.php', { email, password });
       if (res.data.success) {
+        localStorage.setItem('email', res.data.email);
         localStorage.setItem('role', res.data.role);
         setMessage('Login successful');
         setTimeout(() => {
@@ -21,7 +22,8 @@ function LoginPage() {
       } else {
         setMessage(res.data.message || 'Login failed');
       }
-    } catch {
+    } catch (error) {
+      console.error("Login request failed:", error);
       setMessage('Login error');
     }
   };
@@ -39,7 +41,6 @@ function LoginPage() {
             justify-content: center;
             align-items: center;
           }
-
           .login-form {
             background: #fff;
             padding: 2rem;
@@ -48,13 +49,11 @@ function LoginPage() {
             width: 100%;
             max-width: 400px;
           }
-
           .login-form h2 {
             text-align: center;
             margin-bottom: 1.5rem;
             color: #333;
           }
-
           .login-form input {
             width: 93%;
             margin-bottom: 1rem;
@@ -63,7 +62,6 @@ function LoginPage() {
             border: 1px solid #ccc;
             border-radius: 5px;
           }
-
           .login-form button {
             width: 100%;
             padding: 0.75rem;
@@ -75,11 +73,9 @@ function LoginPage() {
             cursor: pointer;
             font-weight: 600;
           }
-
           .login-form button:hover {
             background-color: #0056b3;
           }
-
           .message {
             margin-top: 1rem;
             text-align: center;

@@ -1,23 +1,84 @@
-import { useState } from 'react';
-import CartItem from '../components/CartItem';
+import { useState, useEffect } from 'react';
 
 function CartPage() {
-  const [cart, setCart] = useState(() => JSON.parse(localStorage.getItem('cart') || '[]'));
+  const [cart, setCart] = useState([]);
   const [message, setMessage] = useState('');
 
-  const handleCheckout = async () => {
+  const fetchCartFromBackend = async () => {
+    const email = localStorage.getItem('email');
+    if (!email) return;
+
     try {
-      const res = await fetch('http://localhost:8000/cart/checkout.php', {
+      const res = await fetch('http://localhost/awe-backend/cart/get_cart.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(cart)
+        body: JSON.stringify({ email })
       });
+
       const data = await res.json();
-      setMessage(data.message || 'Checkout complete');
-      setCart([]);
-      localStorage.removeItem('cart');
+      if (data.success) {
+        setCart(data.items);
+        localStorage.setItem('cart', JSON.stringify(data.items));
+      }
+    } catch (err) {
+      console.error("Failed to fetch cart from backend");
+    }
+  };
+
+  useEffect(() => {
+    fetchCartFromBackend(); // 🟢 load cart from backend on page load
+  }, []);
+
+  const handleCheckout = async () => {
+    const email = localStorage.getItem('email');
+    if (!email) {
+      setMessage('You must be logged in to checkout');
+      return;
+    }
+
+    try {
+      const res = await fetch('http://localhost/awe-backend/cart/checkout.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          items: cart
+        })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setMessage(`Checkout successful! Order ID: ${data.orderId}`);
+        setCart([]);
+        localStorage.removeItem('cart');
+      } else {
+        setMessage(data.message);
+      }
     } catch {
       setMessage('Checkout error');
+    }
+  };
+
+  const handleRemove = async (index) => {
+    const email = localStorage.getItem('email');
+    if (!email) return;
+
+    try {
+      const res = await fetch('http://localhost/awe-backend/cart/remove_from_cart.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, index })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        await fetchCartFromBackend(); // 🟢 re-sync with backend after delete
+        setMessage('Item removed successfully');
+      } else {
+        setMessage(data.message || 'Remove failed');
+      }
+    } catch {
+      setMessage('Remove error');
     }
   };
 
@@ -46,6 +107,23 @@ function CartPage() {
             padding: 1rem;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+          }
+
+          .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+          }
+
+          .remove-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 0.3rem 0.7rem;
+            cursor: pointer;
           }
 
           .checkout-btn {
@@ -78,7 +156,12 @@ function CartPage() {
         <h2>Your Cart</h2>
         <div className="cart-list">
           {cart.length > 0 ? (
-            cart.map((item, i) => <CartItem key={i} item={item} />)
+            cart.map((item, index) => (
+              <div key={index} className="cart-item">
+                <span>{item.name} - ${item.price}</span>
+                <button className="remove-btn" onClick={() => handleRemove(index)}>Remove</button>
+              </div>
+            ))
           ) : (
             <p style={{ textAlign: 'center', color: '#666' }}>Your cart is empty.</p>
           )}

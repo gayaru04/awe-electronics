@@ -10,11 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 
-$file = '../data/products.json';
+$usersFile = '../data/users.json';
+$users = file_exists($usersFile) ? json_decode(file_get_contents($usersFile), true) : [];
 
-if (file_exists($file)) {
-    echo file_get_contents($file);
-} else {
-    echo json_encode([]);
+foreach ($users as &$user) {
+    unset($user['password']); // Hide passwords
 }
+
+echo json_encode($users);
 ?>

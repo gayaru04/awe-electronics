@@ -10,11 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 
-$file = '../data/products.json';
-
-if (file_exists($file)) {
-    echo file_get_contents($file);
-} else {
-    echo json_encode([]);
-}
+$ordersFile = '../data/orders.json';
+echo file_exists($ordersFile) ? file_get_contents($ordersFile) : json_encode([]);
 ?>

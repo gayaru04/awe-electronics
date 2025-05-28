@@ -6,16 +6,35 @@ function ProductPage() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/products/get_products.php')
+    axios.get('http://localhost/awe-backend/products/get_products.php')
       .then(res => setProducts(res.data))
       .catch(err => console.error('Error fetching products:', err));
   }, []);
 
-  const addToCart = (product) => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    cart.push(product);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    alert('Added to cart!');
+  const handleAddToCart = async (product) => {
+    const email = localStorage.getItem('email');
+    if (!email) {
+      alert('You must be logged in to add items');
+      return;
+    }
+
+    try {
+      await fetch('http://localhost/awe-backend/cart/add_to_cart.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, item: product })
+      });
+
+      // Optional: update localStorage for immediate cart rendering
+      const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const updatedCart = [...currentCart, product];
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+
+      alert('Added to cart!');
+    } catch (err) {
+      console.error('Add to cart failed', err);
+      alert('Failed to add to cart');
+    }
   };
 
   return (
@@ -49,7 +68,7 @@ function ProductPage() {
         <h2>Products</h2>
         <div className="product-grid">
           {products.map((product, idx) => (
-            <ProductCard key={idx} product={product} onAdd={addToCart} />
+            <ProductCard key={idx} product={product} onAdd={handleAddToCart} />
           ))}
         </div>
       </div>

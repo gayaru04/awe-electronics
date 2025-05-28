@@ -20,14 +20,14 @@ function AdminPage() {
   }, [navigate]);
 
   const fetchProducts = () => {
-    axios.get('http://localhost:8000/products/get_products.php')
+    axios.get('http://localhost/awe-backend/products/get_products.php')
       .then(res => setProducts(res.data))
       .catch(() => alert('Failed to fetch products.'));
   };
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    await axios.post('http://localhost:8000/products/add_product.php', {
+    await axios.post('http://localhost/awe-backend/products/add_product.php', {
       name,
       description,
       price
@@ -39,9 +39,25 @@ function AdminPage() {
   };
 
   const handleDelete = async (id) => {
-    await axios.post('http://localhost:8000/products/delete_product.php', { id });
-    fetchProducts();
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
+
+    try {
+      const res = await axios.post('http://localhost/awe-backend/products/delete_product.php', {
+        id
+      });
+
+      if (res.data.success) {
+        fetchProducts(); // refresh the list
+      } else {
+        alert(res.data.message || 'Failed to delete product');
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+      alert('Network error while deleting product');
+    }
   };
+
+
 
   return (
     <>

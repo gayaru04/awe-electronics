@@ -9,8 +9,21 @@ function RegisterPage() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:8000/auth/register.php', { email, password });
-      setMessage(res.data.message || 'Registered');
+      const res = await axios.post('http://localhost/awe-backend/auth/register.php', { email, password });
+      if (res.data.success) {
+        // Store email and role in localStorage
+        localStorage.setItem('email', res.data.email);
+        localStorage.setItem('role', res.data.role);
+
+        setMessage('Registration successful! Redirecting...');
+      
+        // Optional: redirect to home or login page
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
+      } else {
+        setMessage(res.data.message || 'Registration failed');
+      }
     } catch {
       setMessage('Register error');
     }

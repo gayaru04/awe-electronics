@@ -8,5 +8,10 @@
         "email": "nolansia@gmail.com",
         "password": "123",
         "role": "customer"
+    },
+    {
+        "email": "hansaka@gmail.com",
+        "password": "1234",
+        "role": "user"
     }
 ]
