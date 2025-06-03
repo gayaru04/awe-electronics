@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -13,14 +13,17 @@ function LoginPage() {
     try {
       const res = await axios.post('http://localhost/awe-backend/auth/login.php', { email, password });
       if (res.data.success) {
-        localStorage.setItem('email', res.data.email);
         localStorage.setItem('role', res.data.role);
-        setMessage('Login successful');
+        setMessage('✅ Login successful');
         setTimeout(() => {
           navigate(res.data.role === 'admin' ? '/admin' : '/products');
         }, 500);
       } else {
-        setMessage(res.data.message || 'Login failed');
+        setMessage(
+          res.data.message === 'Invalid credentials'
+            ? 'Incorrect email or password.'
+            : res.data.message || 'Login failed'
+        );
       }
     } catch (error) {
       console.error("Login request failed:", error);
@@ -81,6 +84,10 @@ function LoginPage() {
             text-align: center;
             color: green;
           }
+          .register-link {
+            text-align: center;
+            margin-top: 1rem;
+          }
         `}
       </style>
 
@@ -103,6 +110,9 @@ function LoginPage() {
           />
           <button type="submit">Login</button>
           {message && <p className="message">{message}</p>}
+          <div className="register-link">
+            Don't have an account? <Link to="/register">Register here</Link>
+          </div>
         </form>
       </div>
     </>

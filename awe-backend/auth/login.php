@@ -26,9 +26,6 @@ foreach ($users as $user) {
     }
 }
 
-echo json_encode([
-  'success' => true,
-  'role' => $user['role'],
-  'email' => $user['email']
-]);
+echo json_encode(["success" => false, "message" => "Invalid credentials"]);
+
 ?>

@@ -18,6 +18,12 @@
     },
     {
         "email": "undefined",
-        "items": []
+        "items": [
+            {
+                "id": "68373582ebe89",
+                "name": "Wireless Headset",
+                "price": "149.95"
+            }
+        ]
     }
 ]
