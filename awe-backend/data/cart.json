@@ -25,5 +25,44 @@
                 "price": "149.95"
             }
         ]
+    },
+    {
+        "email": "hansaka@gmail.com",
+        "items": [
+            {
+                "id": "68373582ebe89",
+                "name": "Wireless Headset",
+                "price": "149.95"
+            },
+            {
+                "id": "6837359e67898",
+                "name": "Gaming Monitor",
+                "price": "459.98"
+            }
+        ]
+    },
+    {
+        "email": "hansa@123.com",
+        "items": [
+            {
+                "id": "68373582ebe89",
+                "name": "Wireless Headset",
+                "price": "149.95"
+            },
+            {
+                "id": "68373582ebe89",
+                "name": "Wireless Headset",
+                "price": "149.95"
+            },
+            {
+                "id": "68373582ebe89",
+                "name": "Wireless Headset",
+                "price": "149.95"
+            }
+        ]
+    },
+    {
+        "email": "guest@guest.com",
+        "items": []
     }
 ]

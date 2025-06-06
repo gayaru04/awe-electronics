@@ -23,6 +23,7 @@ function Navbar() {
           .navbar {
             display: flex;
             gap: 1rem;
+            width: 100%;
             background-color: #f0f0f0;
             padding: 1rem 2rem;
             font-family: 'Segoe UI', Inter, system-ui, sans-serif;

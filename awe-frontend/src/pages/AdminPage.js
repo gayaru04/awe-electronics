@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+
 
 function AdminPage() {
   const [products, setProducts] = useState([]);
@@ -22,7 +24,7 @@ function AdminPage() {
   const fetchProducts = () => {
     axios.get('http://localhost/awe-backend/products/get_products.php')
       .then(res => setProducts(res.data))
-      .catch(() => alert('Failed to fetch products.'));
+      .catch(() => toast.success('Failed to fetch products.'));
   };
 
   const handleAdd = async (e) => {
@@ -49,11 +51,11 @@ function AdminPage() {
       if (res.data.success) {
         fetchProducts(); // refresh the list
       } else {
-        alert(res.data.message || 'Failed to delete product');
+        toast.success(res.data.message || 'Failed to delete product');
       }
     } catch (err) {
       console.error('Delete error:', err);
-      alert('Network error while deleting product');
+      toast.success('Network error while deleting product');
     }
   };
 

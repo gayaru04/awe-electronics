@@ -13,5 +13,30 @@
         "email": "hansaka@gmail.com",
         "password": "1234",
         "role": "user"
+    },
+    {
+        "email": "hansa@123.com",
+        "password": "1234",
+        "role": "user"
+    },
+    {
+        "email": "1",
+        "password": "123",
+        "role": "customer"
+    },
+    {
+        "email": "123@123.COM",
+        "password": "123",
+        "role": "admin"
+    },
+    {
+        "email": "ASD@GMAIL.COM",
+        "password": "123",
+        "role": "customer"
+    },
+    {
+        "email": "user@swin.au",
+        "password": "12345",
+        "role": "admin"
     }
 ]

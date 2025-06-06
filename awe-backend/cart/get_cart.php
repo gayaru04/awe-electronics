@@ -20,12 +20,13 @@ if (!$email) {
 $cartFile = '../data/cart.json';
 $cartData = file_exists($cartFile) ? json_decode(file_get_contents($cartFile), true) : [];
 
+$userItems = [];
+
 foreach ($cartData as $entry) {
-    if ($entry['email'] === $email) {
-        echo json_encode(['success' => true, 'items' => $entry['items']]);
-        exit();
+    if ($entry['email'] === $email && isset($entry['items'])) {
+        $userItems = array_merge($userItems, $entry['items']);
     }
 }
 
-echo json_encode(['success' => true, 'items' => []]);
+echo json_encode(['success' => true, 'items' => $userItems]);
 ?>

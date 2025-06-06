@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 
 function CartPage() {
   const [cart, setCart] = useState([]);
-  const [message, setMessage] = useState('');
 
   const fetchCartFromBackend = async () => {
     const email = localStorage.getItem('email');
@@ -21,41 +22,53 @@ function CartPage() {
         localStorage.setItem('cart', JSON.stringify(data.items));
       }
     } catch (err) {
-      console.error("Failed to fetch cart from backend");
+      toast.error("❌ Failed to fetch cart from backend");
     }
   };
 
   useEffect(() => {
-    fetchCartFromBackend(); // 🟢 load cart from backend on page load
+    fetchCartFromBackend();
   }, []);
 
   const handleCheckout = async () => {
     const email = localStorage.getItem('email');
-    if (!email) {
-      setMessage('You must be logged in to checkout');
+    const role = localStorage.getItem('role');
+
+    if (!email || !role) {
+      toast.warning('⚠️ You must be logged in or continue as guest to checkout.');
       return;
+    }
+
+    if (role === 'guest') {
+      const confirmGuest = await Swal.fire({
+        title: "You're continuing as a guest",
+        text: "You won't be able to track orders later. Proceed?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, proceed",
+        cancelButtonText: "Cancel"
+      });
+
+      if (!confirmGuest.isConfirmed) return;
     }
 
     try {
       const res = await fetch('http://localhost/awe-backend/cart/checkout.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          items: cart
-        })
+        body: JSON.stringify({ email, items: cart })
       });
 
       const data = await res.json();
       if (data.success) {
-        setMessage(`Checkout successful! Order ID: ${data.orderId}`);
+        toast.success(`✅ Checkout successful! Order ID: ${data.orderId}`);
         setCart([]);
         localStorage.removeItem('cart');
       } else {
-        setMessage(data.message);
+        toast.error(data.message || '❌ Checkout failed');
       }
     } catch {
-      setMessage('Checkout error');
+      toast.error('❌ Failed to checkout.');
     }
   };
 
@@ -72,13 +85,13 @@ function CartPage() {
 
       const data = await res.json();
       if (data.success) {
-        await fetchCartFromBackend(); // 🟢 re-sync with backend after delete
-        setMessage('Item removed successfully');
+        await fetchCartFromBackend();
+        toast.info('🗑️ Item removed from cart');
       } else {
-        setMessage(data.message || 'Remove failed');
+        toast.error(data.message || '❌ Remove failed');
       }
     } catch {
-      setMessage('Remove error');
+      toast.error('❌ Error removing item');
     }
   };
 
@@ -172,8 +185,6 @@ function CartPage() {
             Checkout
           </button>
         )}
-
-        {message && <p className="message">{message}</p>}
       </div>
     </>
   );

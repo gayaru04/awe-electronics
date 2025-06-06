@@ -5,13 +5,18 @@
         "price": "149.95"
     },
     {
-        "id": "6837359e67898",
-        "name": "Gaming Monitor",
-        "price": "459.98"
+        "id": "6841a0aabd90c",
+        "name": "Gaming Desk",
+        "price": "149.65"
     },
     {
-        "id": "683735bce0b44",
-        "name": "Gaming Keyboard",
-        "price": "95.99"
+        "id": "6841f17969491",
+        "name": "Gaming Mouse ",
+        "price": "65.89"
+    },
+    {
+        "id": "6841f395088ba",
+        "name": "Gaming Monitor",
+        "price": "198.65"
     }
 ]

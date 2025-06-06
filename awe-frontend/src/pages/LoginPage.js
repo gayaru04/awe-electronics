@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -27,19 +30,36 @@ function LoginPage() {
       }
     } catch (error) {
       console.error("Login request failed:", error);
-      setMessage('Login error');
+      toast.warning('Login error');
     }
   };
 
   return (
-    <>
+    <div
+      style={{
+        fontFamily: 'Segoe UI, Inter, system-ui, sans-serif',
+        backgroundImage: "url('/images/image3.png')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        minHeight: '100vh',
+        width: '100%',
+        color: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        textAlign: 'center',
+        padding: '2rem',
+      }}
+    >
+      
       <style>
         {`
           .login-page {
             padding: 2rem;
             font-family: 'Segoe UI', Inter, system-ui, sans-serif;
-            background-color: #f9f9f9;
-            min-height: 80vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -87,6 +107,7 @@ function LoginPage() {
           .register-link {
             text-align: center;
             margin-top: 1rem;
+            color: black;
           }
         `}
       </style>
@@ -115,7 +136,7 @@ function LoginPage() {
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 }
 

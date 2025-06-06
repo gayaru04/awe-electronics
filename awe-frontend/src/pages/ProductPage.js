@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
+import { toast } from 'react-toastify';
 
 function ProductPage() {
   const [products, setProducts] = useState([]);
@@ -14,7 +15,7 @@ function ProductPage() {
   const handleAddToCart = async (product) => {
     const email = localStorage.getItem('email');
     if (!email) {
-      alert('You must be logged in to add items');
+      toast.success('You must be logged in to add items');
       return;
     }
 
@@ -30,10 +31,10 @@ function ProductPage() {
       const updatedCart = [...currentCart, product];
       localStorage.setItem('cart', JSON.stringify(updatedCart));
 
-      alert('Added to cart!');
+      toast.success('✅ Added to cart!');
     } catch (err) {
       console.error('Add to cart failed', err);
-      alert('Failed to add to cart');
+      toast.success('❌ Failed to add to cart');
     }
   };
 
